@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "nombre": "Auriculares Gamer",
+    "precio": "$120",
+    "imagen": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+  },
+  {
+    "id": 2,
+    "nombre": "Teclado Mecanico",
+    "precio": "$90",
+    "imagen": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae"
+  },
+  {
+    "id": 3,
+    "nombre": "Mouse RGB",
+    "precio": "$45",
+    "imagen": "https://images.unsplash.com/photo-1527814050087-3793815479db"
+  },
+  {
+    "id": 4,
+    "nombre": "Monitor Full HD",
+    "precio": "$210",
+    "imagen": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf"
+  }
+]

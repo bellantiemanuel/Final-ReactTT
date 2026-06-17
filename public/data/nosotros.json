@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "nombre": "Emanuel",
+        "email": "emagod@gmail.com",
+        "puesto": "Web Master",
+        "foto": "/images/ema.webp"
+    },
+    {
+        "id": 2,
+        "nombre": "Laura",
+        "email": "laurita@gmail.com",
+        "puesto": "SEO",
+        "foto": "/images/lau.webp"
+    },
+    {
+        "id": 3,
+        "nombre": "Tomás",
+        "email": "tomisin@gmail.com",
+        "puesto": "Junior",
+        "foto": "/images/tomi.webp"
+    },
+    {
+        "id": 4,
+        "nombre": "Ana",
+        "email": "anitalidia@gmail.com",
+        "puesto": "Community Manager",
+        "foto": "/images/ana.webp"
+    }
+]

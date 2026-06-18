@@ -1,13 +1,16 @@
 // Seccion de productos destacados (Hot Sale) en la pagina de inicio
 // Filtra productos con destacado: true desde Firestore y los muestra con un badge
 // Si no hay productos destacados o hay error, no renderiza nada
+// Cada tarjeta tiene dos botones: "Ver detalle" (Link a /producto/:id) y "Agregar al carrito" (addItem de useCart)
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiShoppingCart, FiEye } from 'react-icons/fi'
+import useCart from '../hooks/useCart'
 import { getAll } from '../firebase/productosFirestore'
 import styles from './TarjetaProducto.module.css'
 
 function ProductosDestacados() {
+  const { addItem } = useCart()
   const [productos, setProductos] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
@@ -49,9 +52,9 @@ function ProductosDestacados() {
                 <Link className={styles.botonSecundario} to={`/producto/${producto.id}`}>
                   <FiEye size={14} /> Ver detalle
                 </Link>
-                <Link className={styles.boton} to={`/producto/${producto.id}`}>
-                  <FiShoppingCart size={14} /> Ver oferta
-                </Link>
+                <button className={styles.boton} type="button" onClick={() => addItem(producto)}>
+                  <FiShoppingCart size={14} /> Agregar al carrito
+                </button>
               </div>
             </div>
           </article>

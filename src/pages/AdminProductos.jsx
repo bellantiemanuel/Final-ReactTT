@@ -1,4 +1,7 @@
 // Pagina de administracion de productos (ruta protegida /admin)
+// Solo el usuario con email bellantiemanuel@gmail.com puede agregar, editar o eliminar productos
+// Los demas usuarios autenticados ven un mensaje de permiso denegado
+// esAdmin compara el email del usuario autenticado contra ADMIN_EMAIL; si es false se oculta la UI de gestion
 // Lista todos los productos en una tabla con botones Editar/Eliminar
 // Incluye formulario controlado para crear/editar y modal de confirmacion para eliminar
 // Helmet: title y meta description para SEO
@@ -6,6 +9,7 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi'
+import useAuth from '../hooks/useAuth'
 import {
   getAll as getProductos,
   create as crearProducto,
@@ -16,7 +20,11 @@ import ProductoForm from '../components/ProductoForm'
 import ConfirmModal from '../components/ConfirmModal'
 import SeedButton from '../components/SeedButton'
 
+const ADMIN_EMAIL = 'bellantiemanuel@gmail.com'
+
 function AdminProductos() {
+  const { user } = useAuth()
+  const esAdmin = user?.email === ADMIN_EMAIL
   const [productos, setProductos] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
@@ -88,75 +96,81 @@ function AdminProductos() {
 
       {error && <p className="mensaje-error">{error}</p>}
 
-      <button
-        className="accion-principal"
-        type="button"
-        onClick={() => {
-          setEditando(null)
-          setMostrarForm(true)
-        }}
-      >
-        <FiPlus size={16} /> Agregar producto
-      </button>
+      {esAdmin ? (
+        <>
+          <button
+            className="accion-principal"
+            type="button"
+            onClick={() => {
+              setEditando(null)
+              setMostrarForm(true)
+            }}
+          >
+            <FiPlus size={16} /> Agregar producto
+          </button>
 
-      {mostrarForm && (
-        <ProductoForm
-          key={editando ? editando.id : 'nuevo'}
-          initial={editando}
-          onSubmit={editando ? handleEditar : handleCrear}
-          onCancel={() => {
-            setMostrarForm(false)
-            setEditando(null)
-          }}
-        />
+          {mostrarForm && (
+            <ProductoForm
+              key={editando ? editando.id : 'nuevo'}
+              initial={editando}
+              onSubmit={editando ? handleEditar : handleCrear}
+              onCancel={() => {
+                setMostrarForm(false)
+                setEditando(null)
+              }}
+            />
+          )}
+
+          <table className="admin-tabla">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {productos.map((p) => (
+                <tr key={p.id}>
+                  <td>{p.nombre}</td>
+                  <td>${p.precio}</td>
+                  <td>
+                    <button
+                      className="accion-secundaria"
+                      type="button"
+                      onClick={() => {
+                        setEditando(p)
+                        setMostrarForm(true)
+                      }}
+                    >
+                      <FiEdit2 size={14} /> Editar
+                    </button>
+                    <button
+                      className="accion-peligro"
+                      type="button"
+                      onClick={() => setEliminarId(p.id)}
+                    >
+                      <FiTrash2 size={14} /> Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {eliminarId && (
+            <ConfirmModal
+              mensaje="¿Estas seguro de eliminar este producto?"
+              onConfirm={handleEliminar}
+              onCancel={() => setEliminarId(null)}
+            />
+          )}
+
+          <SeedButton onComplete={recargar} />
+        </>
+      ) : (
+        <p className="mensaje-error">No tienes permisos para administrar productos. Solo el administrador puede acceder a esta seccion.</p>
       )}
-
-      <table className="admin-tabla">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {productos.map((p) => (
-            <tr key={p.id}>
-              <td>{p.nombre}</td>
-              <td>${p.precio}</td>
-              <td>
-                <button
-                  className="accion-secundaria"
-                  type="button"
-                  onClick={() => {
-                    setEditando(p)
-                    setMostrarForm(true)
-                  }}
-                >
-                  <FiEdit2 size={14} /> Editar
-                </button>
-                <button
-                  className="accion-peligro"
-                  type="button"
-                  onClick={() => setEliminarId(p.id)}
-                >
-                  <FiTrash2 size={14} /> Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {eliminarId && (
-        <ConfirmModal
-          mensaje="¿Estas seguro de eliminar este producto?"
-          onConfirm={handleEliminar}
-          onCancel={() => setEliminarId(null)}
-        />
-      )}
-
-      <SeedButton onComplete={recargar} />
     </section>
   )
 }

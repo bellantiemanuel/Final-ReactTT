@@ -1,10 +1,12 @@
 // Pagina del carrito de compras
-// Muestra los productos agregados, totales y opciones para vaciar/quitar items
+// Los usuarios pueden ver el carrito sin estar logueados
+// Si no hay sesion activa muestran un boton para iniciar sesion o registrarse
 // Helmet: title y description para SEO
 // react-icons: FiTrash2 (quitar/vaciar), FiShoppingBag (ver productos), FiArrowLeft (seguir comprando)
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
-import { FiTrash2, FiShoppingBag, FiArrowLeft } from 'react-icons/fi'
+import { FiTrash2, FiShoppingBag, FiArrowLeft, FiLogIn } from 'react-icons/fi'
+import useAuth from '../hooks/useAuth'
 import useCart from '../hooks/useCart'
 
 function obtenerPrecioNumero(precio) {
@@ -13,6 +15,7 @@ function obtenerPrecioNumero(precio) {
 }
 
 function Carrito() {
+  const { user } = useAuth()
   const { cartItems, clearCart, removeItem, totalQuantity } = useCart()
   const total = cartItems.reduce((sum, item) => (
     sum + obtenerPrecioNumero(item.precio) * item.cantidad
@@ -72,9 +75,16 @@ function Carrito() {
           <Link className="accion-secundaria" to="/productos">
             <FiArrowLeft size={16} /> Seguir comprando
           </Link>
-          <button className="accion-principal" type="button" onClick={clearCart}>
-            <FiTrash2 size={16} /> Vaciar carrito
-          </button>
+
+          {user ? (
+            <button className="accion-principal" type="button" onClick={clearCart}>
+              <FiTrash2 size={16} /> Vaciar carrito
+            </button>
+          ) : (
+            <Link className="accion-principal" to="/login">
+              <FiLogIn size={16} /> Iniciar sesión o registrarse para terminar la compra
+            </Link>
+          )}
         </div>
       </div>
     </section>

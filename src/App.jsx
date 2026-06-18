@@ -1,5 +1,6 @@
 // Componente principal con las rutas de la aplicacion
-// /carrito y /admin estan protegidas con ProtectedRoute (requieren autenticacion)
+// /carrito es accesible sin autenticacion (los usuarios pueden ver items antes de loguearse)
+// /admin esta protegida con ProtectedRoute (requiere autenticacion)
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -19,9 +20,7 @@ function App() {
         <Route path="/" element={<Inicio />} />
         <Route path="/productos" element={<Productos />} />
         <Route path="/producto/:id" element={<ProductoDetalle />} />
-        <Route path="/carrito" element={
-          <ProtectedRoute><Carrito /></ProtectedRoute>
-        } />
+        <Route path="/carrito" element={<Carrito />} />
         <Route path="/admin" element={
           <ProtectedRoute><AdminProductos /></ProtectedRoute>
         } />

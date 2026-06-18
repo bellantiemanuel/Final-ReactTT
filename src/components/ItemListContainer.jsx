@@ -1,20 +1,17 @@
+// Contenedor que obtiene y muestra todos los productos desde Firestore
+// Maneja estados de carga, error y renderiza una grilla de Items
 import { useEffect, useState } from 'react'
 import Item from './Item'
+import { getAll } from '../firebase/productosFirestore'
 
 function ItemListContainer() {
   const [productos, setProductos] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
 
+  // Obtiene productos desde Firestore al montar el componente
   useEffect(() => {
-    fetch('/data/productos.json')
-      .then((respuesta) => {
-        if (!respuesta.ok) {
-          throw new Error('No se pudieron cargar los productos')
-        }
-
-        return respuesta.json()
-      })
+    getAll()
       .then((data) => setProductos(data))
       .catch((err) => setError(err.message))
       .finally(() => setCargando(false))

@@ -1,5 +1,5 @@
-// Header principal con logo y controles de autenticacion
-// Si el usuario esta logueado muestra su nombre + boton de cerrar sesion
+// Header principal con logo, navegacion y controles de autenticacion
+// Si el usuario esta logueado muestra su nombre + enlace a Admin + boton cerrar sesion
 // Si no, muestra un enlace a la pagina de login
 import { Link } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
@@ -15,6 +15,11 @@ function Header() {
           <p>Equipamiento tecnologico para todos los dias</p>
         </Link>
       </div>
+
+      <nav className="header-nav">
+        <Link className="header-btn" to="/productos">Productos</Link>
+        {user && <Link className="header-btn" to="/admin">Admin</Link>}
+      </nav>
 
       <div className="header-auth">
         {user ? (

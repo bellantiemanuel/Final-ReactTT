@@ -1,7 +1,8 @@
-// Inicializa la conexion con Firebase usando las credenciales del proyecto
-// Exporta la instancia de auth para usarla en AuthProvider
+// Inicializa Firebase con las credenciales del proyecto
+// Exporta auth (autenticacion) y db (Firestore) para usar en la app
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAM5PcfI4GdHZ2XMIiwsNWPtVDs2hT64I4',
@@ -14,6 +15,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
+const db = getFirestore(app)
 
-export { auth }
+export { auth, db }
 export default app

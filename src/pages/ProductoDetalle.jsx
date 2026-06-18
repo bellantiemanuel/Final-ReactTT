@@ -1,6 +1,10 @@
+// Vista de detalle de un producto individual
+// Obtiene el producto desde Firestore por el ID de la URL
+// Permite agregarlo al carrito con el boton correspondiente
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useCart from '../hooks/useCart'
+import { getById } from '../firebase/productosFirestore'
 
 function ProductoDetalle() {
   const { id } = useParams()
@@ -10,23 +14,12 @@ function ProductoDetalle() {
   const [error, setError] = useState('')
   const [mensaje, setMensaje] = useState('')
 
+  // Obtiene el producto desde Firestore cada vez que cambia el ID
   useEffect(() => {
-    fetch('/data/productos.json')
-      .then((respuesta) => {
-        if (!respuesta.ok) {
-          throw new Error('No se pudo cargar el producto')
-        }
-
-        return respuesta.json()
-      })
-      .then((productos) => {
-        const productoEncontrado = productos.find((item) => String(item.id) === id)
-
-        if (!productoEncontrado) {
-          throw new Error('Producto no encontrado')
-        }
-
-        setProducto(productoEncontrado)
+    getById(id)
+      .then((data) => {
+        if (!data) throw new Error('Producto no encontrado')
+        setProducto(data)
       })
       .catch((err) => setError(err.message))
       .finally(() => setCargando(false))
@@ -45,6 +38,10 @@ function ProductoDetalle() {
     setMensaje('Producto agregado al carrito')
   }
 
+  const precioMostrar = typeof producto.precio === 'number'
+    ? `$${producto.precio}`
+    : producto.precio
+
   return (
     <section className="producto-detalle">
       <img src={producto.imagen} alt={producto.nombre} />
@@ -52,11 +49,8 @@ function ProductoDetalle() {
       <div className="producto-detalle-info">
         <p className="producto-id">Producto #{producto.id}</p>
         <h1>{producto.nombre}</h1>
-        <p className="producto-precio">{producto.precio}</p>
-        <p>
-          Producto seleccionado del catalogo de TechStore. Ideal para mejorar tu
-          setup con accesorios confiables y de buen rendimiento.
-        </p>
+        <p className="producto-precio">{precioMostrar}</p>
+        <p>{producto.descripcion || 'Producto seleccionado del catalogo de TechStore.'}</p>
 
         <div className="detalle-acciones">
           <button className="accion-principal" type="button" onClick={handleAgregar}>

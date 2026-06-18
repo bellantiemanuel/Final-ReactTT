@@ -1,7 +1,11 @@
 // Pagina de administracion de productos (ruta protegida /admin)
 // Lista todos los productos en una tabla con botones Editar/Eliminar
 // Incluye formulario controlado para crear/editar y modal de confirmacion para eliminar
+// Helmet: title y meta description para SEO
+// react-icons: FiPlus (agregar), FiEdit2 (editar), FiTrash2 (eliminar)
 import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi'
 import {
   getAll as getProductos,
   create as crearProducto,
@@ -74,6 +78,11 @@ function AdminProductos() {
 
   return (
     <section className="admin-productos">
+      <Helmet>
+        <title>TechStore - Administrar productos</title>
+        <meta name="description" content="Panel de administración de productos de TechStore." />
+      </Helmet>
+
       <h1>Administrar productos</h1>
 
       {error && <p className="mensaje-error">{error}</p>}
@@ -86,7 +95,7 @@ function AdminProductos() {
           setMostrarForm(true)
         }}
       >
-        Agregar producto
+        <FiPlus size={16} /> Agregar producto
       </button>
 
       {mostrarForm && (
@@ -123,14 +132,14 @@ function AdminProductos() {
                     setMostrarForm(true)
                   }}
                 >
-                  Editar
+                  <FiEdit2 size={14} /> Editar
                 </button>
                 <button
                   className="accion-peligro"
                   type="button"
                   onClick={() => setEliminarId(p.id)}
                 >
-                  Eliminar
+                  <FiTrash2 size={14} /> Eliminar
                 </button>
               </td>
             </tr>

@@ -1,8 +1,12 @@
 // Vista de detalle de un producto individual
 // Obtiene el producto desde Firestore por el ID de la URL
 // Permite agregarlo al carrito con el boton correspondiente
+// Helmet: title dinamico con el nombre del producto para SEO
+// react-icons: FiShoppingCart (agregar), FiArrowLeft (volver)
 import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Link, useParams } from 'react-router-dom'
+import { FiShoppingCart, FiArrowLeft } from 'react-icons/fi'
 import useCart from '../hooks/useCart'
 import { getById } from '../firebase/productosFirestore'
 
@@ -43,7 +47,13 @@ function ProductoDetalle() {
     : producto.precio
 
   return (
-    <section className="producto-detalle">
+    <>
+      <Helmet>
+        <title>TechStore - {producto.nombre}</title>
+        <meta name="description" content={`${producto.nombre} en TechStore - ${producto.descripcion || 'Producto seleccionado del catálogo.'}`} />
+      </Helmet>
+
+      <section className="producto-detalle">
       <img src={producto.imagen} alt={producto.nombre} />
 
       <div className="producto-detalle-info">
@@ -54,13 +64,16 @@ function ProductoDetalle() {
 
         <div className="detalle-acciones">
           <button className="accion-principal" type="button" onClick={handleAgregar}>
-            Agregar al carrito
+            <FiShoppingCart size={16} /> Agregar al carrito
           </button>
-          <Link className="accion-secundaria" to="/productos">Volver al catalogo</Link>
+          <Link className="accion-secundaria" to="/productos">
+            <FiArrowLeft size={16} /> Volver al catalogo
+          </Link>
         </div>
         {mensaje && <p className="producto-mensaje">{mensaje}</p>}
       </div>
     </section>
+    </>
   )
 }
 

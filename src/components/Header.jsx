@@ -1,7 +1,9 @@
 // Header principal con logo, navegacion y controles de autenticacion
 // Si el usuario esta logueado muestra su nombre + enlace a Admin + boton cerrar sesion
 // Si no, muestra un enlace a la pagina de login
+// Los iconos (FiPackage, FiSettings, FiLogIn, FiLogOut) vienen de react-icons
 import { Link } from 'react-router-dom'
+import { FiPackage, FiSettings, FiLogIn, FiLogOut } from 'react-icons/fi'
 import useAuth from '../hooks/useAuth'
 
 function Header() {
@@ -17,8 +19,14 @@ function Header() {
       </div>
 
       <nav className="header-nav">
-        <Link className="header-btn" to="/productos">Productos</Link>
-        {user && <Link className="header-btn" to="/admin">Admin</Link>}
+        <Link className="header-btn" to="/productos">
+          <FiPackage size={16} /> Productos
+        </Link>
+        {user && (
+          <Link className="header-btn" to="/admin">
+            <FiSettings size={16} /> Admin
+          </Link>
+        )}
       </nav>
 
       <div className="header-auth">
@@ -26,11 +34,13 @@ function Header() {
           <>
             <span className="header-user">{user.displayName || user.email}</span>
             <button className="header-btn" type="button" onClick={logout}>
-              Cerrar sesion
+              <FiLogOut size={16} /> Cerrar sesion
             </button>
           </>
         ) : (
-          <Link className="header-btn" to="/login">Iniciar sesion</Link>
+          <Link className="header-btn" to="/login">
+            <FiLogIn size={16} /> Iniciar sesion
+          </Link>
         )}
       </div>
     </header>

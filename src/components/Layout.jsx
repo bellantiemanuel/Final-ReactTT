@@ -1,4 +1,8 @@
+// Layout principal que envuelve todas las paginas
+// Header y Footer se renderizan siempre
+// El contenido principal se centra con Container de react-bootstrap
 import { Link } from 'react-router-dom'
+import { Container } from 'react-bootstrap'
 import Header from './Header'
 import Footer from './Footer'
 import CartWidget from './CartWidget'
@@ -14,7 +18,9 @@ function Layout({ children }) {
           <li><CartWidget /></li>
         </ul>
       </nav>
-      <main>{children}</main>
+      <main>
+        <Container>{children}</Container>
+      </main>
       <Footer />
     </>
   )

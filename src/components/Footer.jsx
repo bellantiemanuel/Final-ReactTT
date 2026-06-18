@@ -1,3 +1,9 @@
+// Footer con informacion de la tienda y equipo de trabajo
+// Usa Container, Row y Col de react-bootstrap para el layout responsivo
+// FiMail de react-icons para el icono de correo
+import { Container, Row, Col } from 'react-bootstrap'
+import { FiMail } from 'react-icons/fi'
+
 const equipo = [
   {
     id: 1,
@@ -25,29 +31,37 @@ const equipo = [
 function Footer() {
   return (
     <footer className="footer">
-      <section className="footer-info">
-        <h2>TechStore</h2>
-        <p>
-          Somos una tienda especializada en productos tecnologicos, accesorios y
-          soluciones digitales para hogares, estudiantes y profesionales.
-        </p>
-        <p>Ciudad Autónoma de Buenos Aires - contacto@techstore.com</p>
-      </section>
+      <Container>
+        <section className="footer-info">
+          <h2>TechStore</h2>
+          <p>
+            Somos una tienda especializada en productos tecnologicos, accesorios y
+            soluciones digitales para hogares, estudiantes y profesionales.
+          </p>
+          <p>Ciudad Autónoma de Buenos Aires - contacto@techstore.com</p>
+        </section>
 
-      <section className="footer-team" aria-label="Equipo de TechStore">
-        {equipo.map((persona) => (
-          <article className="team-card" key={persona.id}>
-            <img src={persona.foto} alt={`Foto de ${persona.nombre}`} />
-            <div>
-              <h3>{persona.nombre}</h3>
-              <p>{persona.puesto}</p>
-              <a href={`mailto:${persona.email}`}>{persona.email}</a>
-            </div>
-          </article>
-        ))}
-      </section>
+        <section className="footer-team" aria-label="Equipo de TechStore">
+          <Row>
+            {equipo.map((persona) => (
+              <Col md={4} key={persona.id}>
+                <article className="team-card">
+                  <img src={persona.foto} alt={`Foto de ${persona.nombre}`} />
+                  <div>
+                    <h3>{persona.nombre}</h3>
+                    <p>{persona.puesto}</p>
+                    <a href={`mailto:${persona.email}`}>
+                      <FiMail size={14} /> {persona.email}
+                    </a>
+                  </div>
+                </article>
+              </Col>
+            ))}
+          </Row>
+        </section>
 
-      <p className="copyright">© 2026 TechStore - Todos los derechos reservados</p>
+        <p className="copyright">© 2026 TechStore - Todos los derechos reservados</p>
+      </Container>
     </footer>
   )
 }

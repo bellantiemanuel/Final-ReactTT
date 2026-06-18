@@ -1,7 +1,9 @@
 // Pagina de inicio de sesion
 // Si el usuario ya esta logueado redirige a la pagina principal
 // Muestra errores especificos segun el codigo de Firebase
+// Helmet: title y meta description para SEO
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Link, Navigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 
@@ -39,6 +41,10 @@ function Login() {
 
   return (
     <section className="auth-page">
+      <Helmet>
+        <title>TechStore - Iniciar sesion</title>
+        <meta name="description" content="Inicia sesion en TechStore para acceder a tu cuenta." />
+      </Helmet>
       <form className="auth-form" onSubmit={handleSubmit}>
         <h1>Iniciar sesion</h1>
 

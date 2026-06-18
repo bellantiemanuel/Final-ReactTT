@@ -1,7 +1,9 @@
 // Pagina de registro de nuevo usuario
 // Valida que las contrasenas coincidan y tengan al menos 6 caracteres
 // Si el usuario ya esta logueado redirige al inicio
+// Helmet: title y meta description para SEO
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Link, Navigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 
@@ -54,6 +56,10 @@ function Register() {
 
   return (
     <section className="auth-page">
+      <Helmet>
+        <title>TechStore - Crear cuenta</title>
+        <meta name="description" content="Registrate en TechStore para acceder a productos exclusivos." />
+      </Helmet>
       <form className="auth-form" onSubmit={handleSubmit}>
         <h1>Crear cuenta</h1>
 

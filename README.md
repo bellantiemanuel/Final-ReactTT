@@ -1,110 +1,166 @@
-# TechStore - eCommerce (Entrega Final)
+# TechStore - eCommerce
 
-Proyecto final del curso de React - TalentoTech. Aplicación eCommerce desarrollada con React + Vite.
+Aplicación eCommerce desarrollada con **React 19 + Vite**, con autenticación de usuarios, catálogo de productos con Firebase Firestore, carrito de compras, búsqueda y paginación, diseño responsivo con Bootstrap y SEO con React Helmet.
 
-## Estado actual del proyecto
+## Requisitos previos
 
-### Ya implementado
-- Estructura base con Vite + React 19
-- Routing con react-router-dom (Inicio, Productos, ProductoDetalle, Carrito)
-- CartContext + CartProvider con Context API (agregar, eliminar, vaciar carrito)
-- Hook personalizado `useCart`
-- Componentes: Header, Footer, Layout, CartWidget, ItemListContainer, Item, TarjetaProducto
-- CSS Modules para TarjetaProducto
-- Catálogo de productos desde JSON local
-- Vista de detalle de producto
-- Carrito funcional con resumen de totales
-- Página de inicio con hero section y catálogo
-- Footer con información del equipo (hardcodeado en componente)
+- **Node.js** >= 18
+- **npm** >= 9
+- Una cuenta en **Firebase** (para Authentication y Firestore)
 
-### Por implementar / mejorar
-- Autenticación de usuarios (AuthContext, Firebase Auth, login/registro)
-- Protección de rutas privadas
-- CRUD de productos con Firebase Firestore
-- Formulario controlado para agregar/editar productos con validaciones
-- Modal de confirmación para eliminar productos
-- Integrar React-Bootstrap para diseño responsivo (sistema de grillas)
-- Migrar a styled-components (CSS-in-JS modular)
-- Agregar React Icons en botones y elementos interactivos
-- Implementar React Helmet para SEO (title/meta dinámicos)
-- Barra de búsqueda con filtrado en tiempo real
-- Paginador de productos
-- Cargar equipo desde `nosotros.json` en lugar de hardcodeado
-- TarjetaProducto.jsx no se usa actualmente (revisar si integrar o eliminar)
-- README actualizado con instrucciones de instalación y ejecución
-- Limpieza y optimización de código
-
----
-
-## Plan de implementación paso a paso
-
-### Paso 1: Autenticación de usuarios (Requerimiento #1)
-- Instalar Firebase (`firebase`)
-- Crear configuración de Firebase (`src/firebase/config.js`)
-- Crear `AuthContext.js` y `AuthProvider.jsx` en `src/context/`
-- Implementar formularios de Login y Registro (`src/pages/Login.jsx`, `src/pages/Register.jsx`)
-- Crear hook personalizado `useAuth.js` en `src/hooks/`
-- Implementar componente `ProtectedRoute.jsx` para proteger rutas
-- Agregar rutas protegidas en `App.jsx`
-- Agregar enlace de Login/Registro y nombre de usuario en Header
-
-### Paso 2: CRUD de productos con Firebase (Requerimiento #2)
-- Crear colección `productos` en Firebase Firestore
-- Modificar `ItemListContainer.jsx` para leer desde Firestore (con loading/error states)
-- Crear `src/pages/AdminProductos.jsx` (ruta protegida) con:
-  - Formulario controlado para agregar producto (nombre obligatorio, precio > 0, validaciones)
-  - Tabla/listado de productos con botones editar/eliminar
-  - Modal de confirmación antes de eliminar
-  - Estados de carga (spinner) y mensajes de error
-- Crear `src/components/ProductoForm.jsx` (formulario reutilizable)
-- Crear `src/components/ConfirmModal.jsx` para confirmación de eliminación
-
-### Paso 3: Búsqueda y paginación (Requerimiento #4)
-- Agregar barra de búsqueda en página de Productos
-- Filtrar productos en tiempo real mientras el usuario escribe
-- Implementar paginador en el catálogo (X productos por página)
-- Crear `src/components/SearchBar.jsx` y `src/components/Pagination.jsx`
-
-### Paso 4: Diseño responsivo con React-Bootstrap (Requerimiento #3)
-- Instalar `react-bootstrap` y `bootstrap`
-- Adaptar Layout y sistema de grillas usando componentes de Bootstrap
-- Migrar estilos a styled-components progresivamente
-- Agregar React Icons (`react-icons`) en botones e interacciones
-- Reemplazar SVG inline de CartWidget con icono de React Icons
-- Implementar React Helmet (`react-helmet-async`) para title/meta dinámicos
-- Agregar Helmet en cada página con título y descripción únicos
-
-### Paso 5: Refactor y limpieza
-- Eliminar hardcodeo del equipo en Footer.jsx, cargar desde `nosotros.json`
-- Evaluar si TarjetaProducto.jsx se integra o se elimina
-- Unificar estilos redundantes, eliminar CSS no usado
-- Optimizar imports y código muerto
-
-### Paso 6: Documentación y preparación para despliegue (Requerimiento #5)
-- Verificar funcionamiento en navegadores
-- Actualizar README con instrucciones completas:
-  - Requisitos previos
-  - Instalación
-  - Configuración de Firebase (variables de entorno)
-  - Comandos disponibles
-  - Estructura del proyecto
-- Probar build de producción (`npm run build`)
-- Ejecutar lint (`npm run lint`)
-
----
-
-## Dependencias a instalar
+## Instalacion
 
 ```bash
-npm install firebase react-bootstrap bootstrap styled-components react-icons react-helmet-async
+# Clonar el repositorio
+git clone <url-del-repo>
+cd react-tt
+
+# Instalar dependencias
+npm install
 ```
 
-## Scripts disponibles
+## Configuración de Firebase
 
-```bash
-npm run dev      # Iniciar servidor de desarrollo
-npm run build    # Build de producción
-npm run lint     # Ejecutar ESLint
-npm run preview  # Vista previa del build
+1. Crear un proyecto en [Firebase Console](https://console.firebase.google.com)
+2. Habilitar **Authentication** → Sign-in method → Email/Password
+3. Crear una base de datos **Firestore** en modo prueba
+4. En la configuracion del proyecto, copiar las credenciales de la web app
+
+### Variables de entorno
+
+Renombrar `.env.example` a `.env` y completar los valores:
+
+```env
+VITE_FIREBASE_API_KEY=tu-api-key
+VITE_FIREBASE_AUTH_DOMAIN=tu-proyecto.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=tu-project-id
+VITE_FIREBASE_STORAGE_BUCKET=tu-proyecto.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=tu-sender-id
+VITE_FIREBASE_APP_ID=tu-app-id
 ```
-# Final-ReactTT
+
+> Si no se crea el archivo `.env`, la app usa por defecto las credenciales del proyecto `react-tt` existente.
+
+### Reglas de Firestore (desarrollo)
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+```
+
+> En produccion, restringir las reglas usando autenticación.
+
+### Poblar la base de datos
+
+1. Iniciar sesion en la app (registrarse o loguearse)
+2. Ir a `/admin` (ruta protegida)
+3. Hacer clic en **"Cargar productos de ejemplo"**
+4. Se insertaran 12 productos con el campo `destacado` para Hot Sale
+
+## Comandos disponibles
+
+| Comando | Descripcion |
+|---|---|
+| `npm run dev` | Inicia servidor de desarrollo |
+| `npm run build` | Build de produccion en `dist/` |
+| `npm run preview` | Vista previa del build de produccion |
+| `npm run lint` | Ejecuta ESLint en todo el proyecto |
+
+## Estructura del proyecto
+
+```
+react-tt/
+├── public/
+│   ├── data/
+│   │   ├── nosotros.json      # Datos del equipo (cargado por Footer)
+│   │   └── productos.json     # Datos de productos (referencia)
+│   └── images/                # Fotos del equipo
+├── src/
+│   ├── components/            # Componentes reutilizables
+│   │   ├── CartWidget.jsx     # Widget del carrito en navegacion
+│   │   ├── ConfirmModal.jsx   # Modal de confirmacion para eliminar
+│   │   ├── Footer.jsx         # Footer con info y equipo
+│   │   ├── Header.jsx         # Header con navegacion y login
+│   │   ├── Item.jsx           # Tarjeta individual de producto
+│   │   ├── ItemListContainer.jsx # Catalogo con busqueda y paginacion
+│   │   ├── Layout.jsx         # Layout principal con Header/Footer
+│   │   ├── Pagination.jsx     # Paginador de productos
+│   │   ├── ProductoForm.jsx   # Formulario para crear/editar productos
+│   │   ├── ProductosDestacados.jsx # Seccion Hot Sale en inicio
+│   │   ├── ProtectedRoute.jsx # Ruta protegida para usuarios autenticados
+│   │   ├── SearchBar.jsx      # Barra de busqueda en tiempo real
+│   │   ├── SeedButton.jsx     # Boton para cargar productos de ejemplo
+│   │   └── TarjetaProducto.module.css # Estilos de tarjeta (CSS Module)
+│   ├── context/               # Context API
+│   │   ├── AuthContext.js     # Contexto de autenticacion
+│   │   ├── AuthProvider.jsx   # Proveedor de autenticacion (Firebase Auth)
+│   │   ├── CartContext.js     # Contexto del carrito
+│   │   └── CartProvider.jsx   # Proveedor del carrito
+│   ├── data/
+│   │   └── seedProductos.js   # Datos de ejemplo para poblar Firestore
+│   ├── firebase/
+│   │   ├── config.js          # Configuracion e inicializacion de Firebase
+│   │   └── productosFirestore.js # CRUD de productos en Firestore
+│   ├── hooks/
+│   │   ├── useAuth.js         # Hook para acceder al contexto de auth
+│   │   └── useCart.js         # Hook para acceder al contexto del carrito
+│   ├── pages/
+│   │   ├── AdminProductos.jsx # Administracion de productos (CRUD)
+│   │   ├── Carrito.jsx        # Carrito de compras
+│   │   ├── Inicio.jsx         # Pagina principal con hero y catalogo
+│   │   ├── Login.jsx          # Inicio de sesion
+│   │   ├── ProductoDetalle.jsx # Detalle de producto individual
+│   │   ├── Productos.jsx      # Catalogo con busqueda y paginacion
+│   │   └── Register.jsx       # Registro de nuevo usuario
+│   ├── App.css                # Estilos globales de la aplicacion
+│   ├── App.jsx                # Componente principal con rutas
+│   ├── index.css              # Estilos base (reset)
+│   └── main.jsx               # Punto de entrada
+├── .env.example               # Plantilla de variables de entorno
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── netlify.toml               # Configuracion de deploy en Netlify
+├── package.json
+├── plan-de-implementacion.md  # Plan original del proyecto
+└── vite.config.js
+```
+
+## Deploy en Netlify
+
+El proyecto incluye un archivo `netlify.toml` con la configuracion basica:
+
+```toml
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+En Netlify, agregar las variables de entorno (`VITE_FIREBASE_*`) en:
+**Site settings** → **Environment variables**
+
+## Funcionalidades implementadas
+
+- [x] Autenticacion con Firebase Auth (registro, login, logout)
+- [x] Rutas protegidas (/carrito, /admin)
+- [x] CRUD de productos en Firestore
+- [x] Busqueda en tiempo real por nombre de producto
+- [x] Paginacion (8 productos por pagina)
+- [x] Productos destacados "Hot Sale" en la pagina de inicio
+- [x] Carrito de compras funcional (agregar, quitar, vaciar)
+- [x] Diseño responsivo con React-Bootstrap
+- [x] Iconos con React Icons (Feather Icons)
+- [x] SEO con React Helmet (titulos y meta descriptios por pagina)
+- [x] Carga dinamica del equipo desde JSON
+- [x] Seed de productos de ejemplo desde el panel admin

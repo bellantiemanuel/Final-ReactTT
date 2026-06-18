@@ -14,6 +14,7 @@ import {
 } from '../firebase/productosFirestore'
 import ProductoForm from '../components/ProductoForm'
 import ConfirmModal from '../components/ConfirmModal'
+import SeedButton from '../components/SeedButton'
 
 function AdminProductos() {
   const [productos, setProductos] = useState([])
@@ -154,6 +155,8 @@ function AdminProductos() {
           onCancel={() => setEliminarId(null)}
         />
       )}
+
+      <SeedButton onComplete={recargar} />
     </section>
   )
 }

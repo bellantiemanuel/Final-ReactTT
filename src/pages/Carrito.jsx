@@ -8,6 +8,7 @@ import { FiTrash2, FiShoppingBag, FiArrowLeft } from 'react-icons/fi'
 import useCart from '../hooks/useCart'
 
 function obtenerPrecioNumero(precio) {
+  if (typeof precio === 'number') return precio
   return Number(precio.replace(/[^0-9.]/g, ''))
 }
 

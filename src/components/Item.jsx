@@ -19,7 +19,7 @@ function Item({ id, nombre, precio, imagen }) {
 
       <div className={styles.contenido}>
         <h3>{nombre}</h3>
-        <p>{precio}</p>
+        <p>{typeof precio === 'number' ? `$${precio}` : precio}</p>
 
         <div className={styles.acciones}>
           <Link className={styles.botonSecundario} to={`/producto/${id}`}>

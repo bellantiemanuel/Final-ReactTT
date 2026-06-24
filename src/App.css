@@ -546,6 +546,18 @@
   margin-top: 20px;
 }
 
+.form-preview {
+  margin-top: 10px;
+}
+
+.form-preview img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;

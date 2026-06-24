@@ -57,7 +57,6 @@ function ProductoDetalle() {
       <img src={producto.imagen} alt={producto.nombre} />
 
       <div className="producto-detalle-info">
-        <p className="producto-id">Producto #{producto.id}</p>
         <h1>{producto.nombre}</h1>
         <p className="producto-precio">{precioMostrar}</p>
         <p>{producto.descripcion || 'Producto seleccionado del catalogo de TechStore.'}</p>

@@ -1,7 +1,9 @@
 // Formulario controlado reutilizable para crear o editar productos
 // Recibe initial (datos existentes para edicion), onSubmit y onCancel
 // Valida que nombre no este vacio y precio sea un numero positivo
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+
+const IMGBB_API_KEY = '21afb58205f6e5ead1bc9355b38e4729'
 
 const estadosIniciales = {
   nombre: '',
@@ -11,7 +13,7 @@ const estadosIniciales = {
 }
 
 function ProductoForm({ initial, onSubmit, onCancel }) {
-  // Toma el estado inicial del producto a editar, o vacio si es creacion
+  const fileInputRef = useRef(null)
   const estadoInicial = initial
     ? {
         nombre: initial.nombre || '',
@@ -23,15 +25,39 @@ function ProductoForm({ initial, onSubmit, onCancel }) {
 
   const [campos, setCampos] = useState(estadoInicial)
   const [errores, setErrores] = useState({})
+  const [imagenFile, setImagenFile] = useState(null)
+  const [subiendo, setSubiendo] = useState(false)
 
-  // Actualiza el campo modificado y limpia su error asociado
   const handleChange = (e) => {
     const { name, value } = e.target
     setCampos((prev) => ({ ...prev, [name]: value }))
     setErrores((prev) => ({ ...prev, [name]: '' }))
   }
 
-  // Valida los campos antes de enviar
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setImagenFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCampos((prev) => ({ ...prev, imagen: reader.result }))
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const subirImagen = async (file) => {
+    const formData = new FormData()
+    formData.append('image', file)
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      method: 'POST',
+      body: formData
+    })
+    const data = await res.json()
+    if (!data.success) throw new Error('La subida de la imagen a Imgbb falló.')
+    return data.data.url
+  }
+
   const validar = () => {
     const errs = {}
     if (!campos.nombre.trim()) errs.nombre = 'El nombre es obligatorio'
@@ -39,19 +65,34 @@ function ProductoForm({ initial, onSubmit, onCancel }) {
     if (!campos.precio || Number.isNaN(precioNum) || precioNum <= 0) {
       errs.precio = 'El precio debe ser un numero mayor a 0'
     }
+    if (!imagenFile && !campos.imagen) {
+      errs.imagen = 'Debes seleccionar una imagen'
+    }
     setErrores(errs)
     return Object.keys(errs).length === 0
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!validar()) return
-    onSubmit({
-      nombre: campos.nombre.trim(),
-      precio: Number(campos.precio),
-      imagen: campos.imagen.trim(),
-      descripcion: campos.descripcion.trim()
-    })
+    setSubiendo(true)
+
+    try {
+      let urlImagen = campos.imagen
+      if (imagenFile) {
+        urlImagen = await subirImagen(imagenFile)
+      }
+      await onSubmit({
+        nombre: campos.nombre.trim(),
+        precio: Number(campos.precio),
+        imagen: urlImagen,
+        descripcion: campos.descripcion.trim()
+      })
+    } catch (err) {
+      setErrores((prev) => ({ ...prev, imagen: err.message }))
+    } finally {
+      setSubiendo(false)
+    }
   }
 
   return (
@@ -81,13 +122,26 @@ function ProductoForm({ initial, onSubmit, onCancel }) {
       </div>
 
       <div className="form-campo">
-        <label htmlFor="imagen">URL de imagen</label>
+        <label htmlFor="imagen">Imagen del producto</label>
         <input
+          ref={fileInputRef}
           id="imagen"
           name="imagen"
-          value={campos.imagen}
-          onChange={handleChange}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
         />
+        {campos.imagen && !imagenFile && initial?.imagen && (
+          <div className="form-preview">
+            <img src={initial.imagen} alt="Vista previa" />
+          </div>
+        )}
+        {imagenFile && (
+          <div className="form-preview">
+            <img src={campos.imagen} alt="Vista previa" />
+          </div>
+        )}
+        {errores.imagen && <span className="form-error">{errores.imagen}</span>}
       </div>
 
       <div className="form-campo">
@@ -102,11 +156,11 @@ function ProductoForm({ initial, onSubmit, onCancel }) {
       </div>
 
       <div className="form-acciones">
-        <button className="accion-principal" type="submit">
-          {initial ? 'Guardar cambios' : 'Agregar producto'}
+        <button className="accion-principal" type="submit" disabled={subiendo}>
+          {subiendo ? 'Subiendo imagen...' : initial ? 'Guardar cambios' : 'Agregar producto'}
         </button>
         {onCancel && (
-          <button className="accion-secundaria" type="button" onClick={onCancel}>
+          <button className="accion-secundaria" type="button" onClick={onCancel} disabled={subiendo}>
             Cancelar
           </button>
         )}

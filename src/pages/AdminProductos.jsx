@@ -18,7 +18,7 @@ import {
 } from '../firebase/productosFirestore'
 import ProductoForm from '../components/ProductoForm'
 import ConfirmModal from '../components/ConfirmModal'
-import SeedButton from '../components/SeedButton'
+// import SeedButton from '../components/SeedButton'
 
 const ADMIN_EMAIL = 'bellantiemanuel@gmail.com'
 
@@ -166,7 +166,7 @@ function AdminProductos() {
             />
           )}
 
-          <SeedButton onComplete={recargar} />
+          {/* <SeedButton onComplete={recargar} /> */}
         </>
       ) : (
         <p className="mensaje-error">No tienes permisos para administrar productos. Solo el administrador puede acceder a esta seccion.</p>

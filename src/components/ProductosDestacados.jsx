@@ -14,6 +14,7 @@ function ProductosDestacados() {
   const [productos, setProductos] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
+  const [tooltipId, setTooltipId] = useState(null)
 
   useEffect(() => {
     getAll()
@@ -52,9 +53,18 @@ function ProductosDestacados() {
                 <Link className={styles.botonSecundario} to={`/producto/${producto.id}`}>
                   <FiEye size={14} /> Ver detalle
                 </Link>
-                <button className={styles.boton} type="button" onClick={() => addItem(producto)}>
-                  <FiShoppingCart size={14} /> Agregar al carrito
-                </button>
+                <div className={styles.botonWrapper}>
+                  <button className={styles.boton} type="button" onClick={() => {
+                    addItem(producto)
+                    setTooltipId(producto.id)
+                    setTimeout(() => setTooltipId(null), 2000)
+                  }}>
+                    <FiShoppingCart size={14} /> Agregar al carrito
+                  </button>
+                  {tooltipId === producto.id && (
+                    <span className={styles.tooltip}>Producto agregado</span>
+                  )}
+                </div>
               </div>
             </div>
           </article>

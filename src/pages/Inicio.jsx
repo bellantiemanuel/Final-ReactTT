@@ -1,7 +1,7 @@
 // Pagina de inicio con hero section, productos destacados (Hot Sale) arriba y catalogo completo abajo
 // Helmet define el title y meta description para SEO
+import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import ItemListContainer from '../components/ItemListContainer'
 import ProductosDestacados from '../components/ProductosDestacados'
 
 function Inicio() {
@@ -18,7 +18,12 @@ function Inicio() {
       </section>
 
       <ProductosDestacados />
-      <ItemListContainer />
+
+      <div className="explore-catalog">
+        <Link to="/productos" className="btn-explore">
+          Explorar catálogo completo
+        </Link>
+      </div>
     </>
   )
 }

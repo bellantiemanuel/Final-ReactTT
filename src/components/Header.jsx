@@ -19,9 +19,9 @@ function Header() {
       </div>
 
       <nav className="header-nav">
-        <Link className="header-btn" to="/productos">
+        {/* <Link className="header-btn" to="/productos">
           <FiPackage size={16} /> Productos
-        </Link>
+        </Link> */}
         {user && (
           <Link className="header-btn" to="/admin">
             <FiSettings size={16} /> Admin

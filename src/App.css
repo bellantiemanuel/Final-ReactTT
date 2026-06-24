@@ -747,3 +747,28 @@
     width: 100%;
   }
 }
+
+.explore-catalog {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.btn-explore {
+  display: inline-block;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  padding: 16px 40px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-explore:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
